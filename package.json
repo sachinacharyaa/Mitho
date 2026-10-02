@@ -1,0 +1,15 @@
+{
+  "name": "mitho",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mitho food delivery — customers, restaurants, riders, and admin in one app.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.5"
+  }
+}
