@@ -2,7 +2,6 @@ App.kitchenLinks = [
     { id: "home", href: "#/kitchen", label: "Overview" },
     { id: "orders", href: "#/kitchen/orders", label: "Orders" },
     { id: "menu", href: "#/kitchen/menu", label: "Menu" },
-    { id: "notifications", href: "#/kitchen/notifications", label: "Alerts" },
     { id: "settings", href: "#/kitchen/settings", label: "Settings" }
 ];
 

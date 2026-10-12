@@ -20,13 +20,11 @@ function paintGrid() {
 
 App.viewExplore = async function viewExplore(personal) {
     App.title(personal ? "Kitchens" : "Browse");
-    const [restaurants, notes, orders] = await Promise.all([
+    const [restaurants, orders] = await Promise.all([
         API.get("/api/restaurants"),
-        App.state.user?.role === "customer" ? API.get("/api/notifications") : Promise.resolve([]),
         personal ? API.get("/api/orders") : Promise.resolve([])
     ]);
     App.state.restaurants = restaurants;
-    const unread = notes.filter((note) => !note.isRead).length;
     const live = orders.find((order) => !["delivered", "cancelled"].includes(order.status));
     const cuisines = ["All", ...new Set(restaurants.map((row) => row.cuisine).filter(Boolean))];
     const rows = App.filteredRestaurants();
@@ -51,7 +49,7 @@ App.viewExplore = async function viewExplore(personal) {
         <label class="check"><input type="checkbox" data-change="open-only" ${App.state.openOnly ? "checked" : ""} /> Open now</label>
       </div>
       <div class="r-grid three" id="restaurant-grid">${rows.length ? rows.map(App.restaurantCard).join("") : App.empty("🍽️", "No kitchens match", "Try another cuisine or clear the search.")}</div>`;
-    return App.marketShell(personal ? "home" : "browse", content, unread);
+    return App.marketShell(personal ? "home" : "browse", content);
 };
 
 App.inputs.search = function onSearch(input) {
@@ -219,8 +217,7 @@ App.viewRestaurant = async function viewRestaurant(id) {
         </div>
         <aside class="cart-peek" id="cart-peek">${cartPeekInner()}</aside>
       </div>`;
-    const notes = App.state.user?.role === "customer" ? await API.get("/api/notifications") : [];
-    return App.marketShell("", content, notes.filter((note) => !note.isRead).length);
+    return App.marketShell("", content);
 };
 
 App.actions["jump-cat"] = (el) => document.getElementById(el.dataset.target)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -249,8 +246,7 @@ function cartBody() {
 
 App.viewCart = async function viewCart() {
     App.title("Tray");
-    const notes = App.state.user?.role === "customer" ? await API.get("/api/notifications") : [];
-    return App.marketShell("cart", `<div id="cart-body">${cartBody()}</div>`, notes.filter((note) => !note.isRead).length);
+    return App.marketShell("cart", `<div id="cart-body">${cartBody()}</div>`);
 };
 
 App.viewCheckout = async function viewCheckout() {
@@ -340,10 +336,10 @@ function orderCard(order, href) {
 
 App.viewOrders = async function viewOrders() {
     App.title("Orders");
-    const [orders, notes] = await Promise.all([API.get("/api/orders"), API.get("/api/notifications")]);
+    const orders = await API.get("/api/orders");
     const content = `<div class="page-head"><div><p class="eyebrow">History</p><h1>Your orders</h1></div></div>
       ${orders.length ? `<div class="order-list">${orders.map((order) => orderCard(order, `#/app/orders/${order.id}`)).join("")}</div>` : App.empty("🧾", "No orders yet", "When you place one, it will live here.", `<a class="btn btn-primary" href="#/app">Find food</a>`)}`;
-    return App.customerShell("orders", content, notes.filter((note) => !note.isRead).length);
+    return App.customerShell("orders", content);
 };
 
 App.viewOrder = async function viewOrder(id, fresh) {
@@ -384,8 +380,7 @@ App.viewOrder = async function viewOrder(id, fresh) {
         </div>
       </div>
       <div style="margin-top:16px">${review}</div>`;
-    const notes = await API.get("/api/notifications");
-    return App.customerShell("orders", content, notes.filter((note) => !note.isRead).length);
+    return App.customerShell("orders", content);
 };
 
 App.actions["set-star"] = function setStar(el) {
@@ -443,7 +438,6 @@ App.actions.reorder = async function reorder(el) {
 App.viewProfile = async function viewProfile() {
     App.title("Your details");
     const user = App.state.user;
-    const notes = await API.get("/api/notifications");
     const content = `<div class="page-head"><div><p class="eyebrow">Account</p><h1>Your details</h1></div></div>
       <div class="split">
         <form class="panel form-stack" style="position:static" data-form="profile" novalidate>
@@ -456,7 +450,7 @@ App.viewProfile = async function viewProfile() {
         </form>
         <div class="panel" style="position:static">${App.passwordForm()}</div>
       </div>`;
-    return App.customerShell("profile", content, notes.filter((note) => !note.isRead).length);
+    return App.customerShell("profile", content);
 };
 
 App.forms.profile = async function saveProfile(form) {
@@ -471,40 +465,4 @@ App.forms.profile = async function saveProfile(form) {
         App.formError(form, error.message);
         button.disabled = false;
     }
-};
-
-App.viewNotifications = async function viewNotifications() {
-    App.title("Alerts");
-    const notes = await API.get("/api/notifications");
-    const unread = notes.filter((note) => !note.isRead).length;
-    const role = App.state.user.role;
-    const hrefFor = (note) => {
-        if (!note.orderId) return "";
-        if (role === "customer") return `#/app/orders/${note.orderId}`;
-        if (role === "restaurant") return "#/kitchen/orders";
-        if (role === "rider") return "#/ride";
-        return "#/admin/orders";
-    };
-    const content = `<div class="page-head"><div><p class="eyebrow">Inbox</p><h1>Alerts</h1></div>
-      ${unread ? `<button class="btn btn-line btn-small" type="button" data-action="read-all">Mark all read</button>` : ""}</div>
-      ${notes.length ? `<div class="order-list">${notes.map((note) => {
-          const href = hrefFor(note);
-          const inner = `<div class="spread"><strong>${App.esc(note.message)}</strong>${note.isRead ? "" : `<span class="pill tone-wait">New</span>`}</div><p class="small muted">${App.timeAgo(note.createdAt)}</p>`;
-          return href
-              ? `<a class="order-card" href="${href}" data-action="mark-read" data-id="${note.id}">${inner}</a>`
-              : `<article class="order-card">${inner}</article>`;
-      }).join("")}</div>` : App.empty("🔔", "You're all caught up", "Order updates will land here.")}`;
-    if (role === "customer") return App.customerShell("notifications", content, unread);
-    if (role === "restaurant") return App.workspace({ active: "notifications", links: App.kitchenLinks, content });
-    if (role === "rider") return App.workspace({ active: "notifications", links: App.riderLinks, content });
-    return App.workspace({ active: "notifications", links: App.adminLinks, content });
-};
-
-App.actions["mark-read"] = async function markRead(el) {
-    if (!el.dataset.id) return;
-    API.patch(`/api/notifications/${el.dataset.id}/read`).catch(() => {});
-};
-App.actions["read-all"] = async function readAll() {
-    await API.post("/api/notifications/read-all");
-    App.render();
 };

@@ -44,7 +44,6 @@ async function routeView() {
         if (second === "orders" && third) return App.viewOrder(third, fourth === "fresh");
         if (second === "orders") return App.viewOrders();
         if (second === "profile") return App.viewProfile();
-        if (second === "notifications") return App.viewNotifications();
     }
     if (area === "kitchen") {
         requireRole("restaurant");
@@ -52,14 +51,12 @@ async function routeView() {
         if (second === "orders") return App.viewKitchenOrders();
         if (second === "menu") return App.viewKitchenMenu();
         if (second === "settings") return App.viewKitchenSettings();
-        if (second === "notifications") return App.viewNotifications();
     }
     if (area === "ride") {
         requireRole("rider");
         if (!second) return App.viewRide();
         if (second === "jobs") return App.viewRideJobs();
         if (second === "history") return App.viewRideHistory();
-        if (second === "notifications") return App.viewNotifications();
     }
     if (area === "admin") {
         // Invite gate: #/admin works without being listed on the public site.
@@ -71,7 +68,6 @@ async function routeView() {
         if (second === "restaurants") return App.viewAdminRestaurants();
         if (second === "riders") return App.viewAdminRiders();
         if (second === "payments") return App.viewAdminPayments();
-        if (second === "notifications") return App.viewNotifications();
     }
     App.title("Not found");
     return `<div class="center-screen"><div class="panel" style="padding:28px"><h1>That page isn't on the menu</h1><a class="btn btn-primary" href="#/" style="margin-top:12px">Back home</a></div></div>`;

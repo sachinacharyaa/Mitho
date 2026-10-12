@@ -4,8 +4,7 @@ App.adminLinks = [
     { id: "customers", href: "#/admin/customers", label: "Customers" },
     { id: "restaurants", href: "#/admin/restaurants", label: "Kitchens" },
     { id: "riders", href: "#/admin/riders", label: "Riders" },
-    { id: "payments", href: "#/admin/payments", label: "Payments" },
-    { id: "notifications", href: "#/admin/notifications", label: "Alerts" }
+    { id: "payments", href: "#/admin/payments", label: "Payments" }
 ];
 
 const ORDER_OPTIONS = ["pending", "confirmed", "preparing", "ready_for_pickup", "out_for_delivery", "delivered", "cancelled"];

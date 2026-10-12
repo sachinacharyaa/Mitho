@@ -137,6 +137,7 @@ App.emojiFor = function emojiFor(text) {
 };
 
 App.safeImage = function safeImage(src) {
+    if (typeof src === "string" && /^\/images\/[a-z0-9.-]+\.(jpe?g|png|webp)$/i.test(src)) return src;
     try {
         const url = new URL(src);
         return url.protocol === "https:" ? url.href : "";
@@ -212,7 +213,7 @@ App.publicShell = function publicShell(content, extra = {}) {
       <footer class="site-foot">${App.dbFooter()}</footer>`;
 };
 
-App.customerShell = function customerShell(active, content, unread = 0) {
+App.customerShell = function customerShell(active, content) {
     const user = App.state.user;
     const count = App.cartCount();
     const link = (id, href, label, extra = "") => `<a href="${href}" class="${active === id ? "on" : ""}">${label}${extra}</a>`;
@@ -222,7 +223,6 @@ App.customerShell = function customerShell(active, content, unread = 0) {
         <nav>
           ${link("home", "#/app", "<span>Kitchens</span>")}
           ${link("orders", "#/app/orders", "<span>Orders</span>")}
-          ${link("notifications", "#/app/notifications", `<span>Alerts</span>${unread ? `<i class="badge">${unread}</i>` : ""}`)}
           <a href="#/cart"><span>Tray</span>${count ? `<i class="badge" id="cart-count">${count}</i>` : `<i class="badge" id="cart-count" hidden>0</i>`}</a>
           <a href="#/app/profile" class="avatar" title="${App.esc(user?.name || "")}">${App.initial(user?.name)}</a>
           <button class="btn btn-line btn-small" type="button" data-action="logout">Sign out</button>
@@ -232,10 +232,10 @@ App.customerShell = function customerShell(active, content, unread = 0) {
       <footer class="site-foot">${App.dbFooter()}</footer>`;
 };
 
-App.marketShell = function marketShell(active, content, unread = 0) {
+App.marketShell = function marketShell(active, content) {
     const role = App.state.user?.role;
     if (!role) return App.publicShell(content);
-    if (role === "customer") return App.customerShell(active, content, unread);
+    if (role === "customer") return App.customerShell(active, content);
     return App.publicShell(content, {
         banner: `You're signed in as ${App.state.user.name}.`,
         href: App.homeFor(role),

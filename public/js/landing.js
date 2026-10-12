@@ -37,9 +37,9 @@ App.viewLanding = async function viewLanding() {
           </div>
         </div>
         <div class="hero-stage">
-          <article class="float-card a">${App.photo(restaurants[0]?.coverImage, "🥟", "photo-lg")}<strong>Jhol momo</strong><span class="muted small">Momo House · Rs. 260</span></article>
-          <article class="float-card b">${App.photo(restaurants.find((r) => r.cuisine === "Thakali")?.coverImage, "🍛")}<strong>Dal bhat</strong><span class="muted small">Thakali Kitchen · Rs. 420</span></article>
-          <article class="float-card c">${App.photo(restaurants.find((r) => r.cuisine === "Japanese")?.coverImage, "🍣")}<strong>Salmon nigiri</strong><span class="muted small">Nori Room · Rs. 480</span></article>
+          <article class="float-card a">${App.photo("/images/java-drinks.jpg", "", "photo-lg")}<strong>Cappuccino</strong><span class="muted small">Himalayan Java · Rs. 280</span></article>
+          <article class="float-card b">${App.photo("/images/jimbu-thakali.jpg", "", "photo-lg")}<strong>Thakali Khana</strong><span class="muted small">Jimbu Thakali · Rs. 420</span></article>
+          <article class="float-card c">${App.photo("/images/momo-jhol.jpg", "", "photo-lg")}<strong>Jhol momo</strong><span class="muted small">Momo House · Rs. 260</span></article>
         </div>
       </section>
       <section class="section wrap" id="kitchens">

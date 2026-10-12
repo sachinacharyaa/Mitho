@@ -1,8 +1,7 @@
 App.riderLinks = [
     { id: "home", href: "#/ride", label: "Today" },
     { id: "jobs", href: "#/ride/jobs", label: "Jobs" },
-    { id: "history", href: "#/ride/history", label: "History" },
-    { id: "notifications", href: "#/ride/notifications", label: "Alerts" }
+    { id: "history", href: "#/ride/history", label: "History" }
 ];
 
 function jobCard(order, canAccept) {
