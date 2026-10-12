@@ -10,7 +10,7 @@ function requireRole(role) {
     const user = App.state.user;
     if (!user) {
         sessionStorage.setItem("mitho_next", location.hash || "#/app");
-        const target = `#/login/${role}`;
+        const target = role === "admin" ? "#/admin" : `#/login/${role}`;
         if (location.hash !== target) location.hash = target;
         const error = new Error("REDIRECT");
         error.code = "REDIRECT";
@@ -54,6 +54,25 @@ async function routeView() {
         if (second === "settings") return App.viewKitchenSettings();
         if (second === "notifications") return App.viewNotifications();
     }
+    if (area === "ride") {
+        requireRole("rider");
+        if (!second) return App.viewRide();
+        if (second === "jobs") return App.viewRideJobs();
+        if (second === "history") return App.viewRideHistory();
+        if (second === "notifications") return App.viewNotifications();
+    }
+    if (area === "admin") {
+        // Invite gate: #/admin works without being listed on the public site.
+        if (!App.state.user) return App.viewAdminInvite();
+        requireRole("admin");
+        if (!second) return App.viewAdmin();
+        if (second === "orders") return App.viewAdminOrders();
+        if (second === "customers") return App.viewAdminCustomers();
+        if (second === "restaurants") return App.viewAdminRestaurants();
+        if (second === "riders") return App.viewAdminRiders();
+        if (second === "payments") return App.viewAdminPayments();
+        if (second === "notifications") return App.viewNotifications();
+    }
     App.title("Not found");
     return `<div class="center-screen"><div class="panel" style="padding:28px"><h1>That page isn't on the menu</h1><a class="btn btn-primary" href="#/" style="margin-top:12px">Back home</a></div></div>`;
 }
@@ -69,7 +88,8 @@ App.render = async function render() {
         root.innerHTML = html;
         window.scrollTo(0, 0);
         const hash = location.hash;
-        if (hash === "#/kitchen" || hash === "#/kitchen/orders" || hash.startsWith("#/app/orders/")) {
+        const adminDesk = App.state.user?.role === "admin" && (hash === "#/admin" || hash.startsWith("#/admin/"));
+        if (hash === "#/kitchen" || hash === "#/kitchen/orders" || hash === "#/ride/jobs" || hash.startsWith("#/app/orders/") || adminDesk) {
             poll = setInterval(() => {
                 const active = document.activeElement;
                 if (document.querySelector(".overlay")) return;
@@ -134,12 +154,7 @@ async function boot() {
     if (token) {
         try {
             const data = await API.get("/api/auth/me");
-            if (data.user?.role === "customer" || data.user?.role === "restaurant") {
-                App.state.user = data.user;
-            } else {
-                localStorage.removeItem("mitho_token");
-                App.state.user = null;
-            }
+            App.state.user = data.user;
         } catch {
             localStorage.removeItem("mitho_token");
             App.state.user = null;

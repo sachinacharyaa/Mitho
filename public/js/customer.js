@@ -481,7 +481,9 @@ App.viewNotifications = async function viewNotifications() {
     const hrefFor = (note) => {
         if (!note.orderId) return "";
         if (role === "customer") return `#/app/orders/${note.orderId}`;
-        return "#/kitchen/orders";
+        if (role === "restaurant") return "#/kitchen/orders";
+        if (role === "rider") return "#/ride";
+        return "#/admin/orders";
     };
     const content = `<div class="page-head"><div><p class="eyebrow">Inbox</p><h1>Alerts</h1></div>
       ${unread ? `<button class="btn btn-line btn-small" type="button" data-action="read-all">Mark all read</button>` : ""}</div>
@@ -493,7 +495,9 @@ App.viewNotifications = async function viewNotifications() {
               : `<article class="order-card">${inner}</article>`;
       }).join("")}</div>` : App.empty("🔔", "You're all caught up", "Order updates will land here.")}`;
     if (role === "customer") return App.customerShell("notifications", content, unread);
-    return App.workspace({ active: "notifications", links: App.kitchenLinks, content });
+    if (role === "restaurant") return App.workspace({ active: "notifications", links: App.kitchenLinks, content });
+    if (role === "rider") return App.workspace({ active: "notifications", links: App.riderLinks, content });
+    return App.workspace({ active: "notifications", links: App.adminLinks, content });
 };
 
 App.actions["mark-read"] = async function markRead(el) {

@@ -24,7 +24,8 @@ const App = window.App = {
     },
     DEMOS: {
         customer: ["aarav@mitho.com", "mitho123"],
-        restaurant: ["kitchen@momohouse.com", "mitho123"]
+        restaurant: ["kitchen@momohouse.com", "mitho123"],
+        rider: ["rita@mitho.com", "mitho123"]
     }
 };
 
@@ -58,6 +59,8 @@ App.toast = function toast(message) {
 
 App.homeFor = function homeFor(role) {
     if (role === "restaurant") return "#/kitchen";
+    if (role === "rider") return "#/ride";
+    if (role === "admin") return "#/admin";
     return "#/app";
 };
 

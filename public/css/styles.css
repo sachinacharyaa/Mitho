@@ -117,6 +117,8 @@ input:focus, select:focus, textarea:focus { border-color: #e09a86; box-shadow: 0
 .how, .portal-grid, .stats, .r-grid { display: grid; gap: 14px; }
 .how { grid-template-columns: repeat(4, 1fr); }
 .how.two, .portal-grid.two { grid-template-columns: repeat(2, 1fr); }
+.how.three, .portal-grid.three { grid-template-columns: repeat(3, 1fr); }
+.role-tabs.three { grid-template-columns: repeat(3, 1fr); }
 .portal-grid, .r-grid { grid-template-columns: repeat(4, 1fr); }
 .r-grid.three { grid-template-columns: repeat(3, 1fr); }
 .how-card, .portal, .panel, .stat, .r-card, .order-card, .sheet {
@@ -268,7 +270,7 @@ body.modal-open { overflow: hidden; }
   .cart-peek { position: static; }
 }
 @media (max-width: 680px) {
-  .how, .how.two, .portal-grid, .portal-grid.two, .r-grid, .r-grid.three, .stats, .form-grid, .pay-grid, .role-tabs, .role-tabs.two { grid-template-columns: 1fr; }
+  .how, .how.two, .how.three, .portal-grid, .portal-grid.two, .portal-grid.three, .r-grid, .r-grid.three, .stats, .form-grid, .pay-grid, .role-tabs, .role-tabs.two, .role-tabs.three { grid-template-columns: 1fr; }
   .topbar nav a span { display: none; }
   .dish { grid-template-columns: 72px 1fr; }
   .dish .price-col { grid-column: 2; display: flex; justify-content: space-between; align-items: center; }

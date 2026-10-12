@@ -21,6 +21,7 @@ App.viewLanding = async function viewLanding() {
         <a href="#/">${App.logo()}</a>
         <nav>
           <a href="#/signup/restaurant">For kitchens</a>
+          <a href="#/signup/rider">Ride</a>
           <a href="${user ? App.homeFor(user.role) : "#/login/customer"}">${user ? "Continue" : "Log in"}</a>
           ${user ? "" : `<a class="btn btn-primary btn-small" href="#/signup/customer">Sign up</a>`}
         </nav>
@@ -29,7 +30,7 @@ App.viewLanding = async function viewLanding() {
         <div>
           <p class="eyebrow">Kathmandu · delivery & pickup</p>
           <h1>The whole city's kitchen, one order away.</h1>
-          <p class="lede">Order from local kitchens, or run your own. Customers and restaurants share one order from the stove to the door.</p>
+          <p class="lede">Customers, kitchens, and riders share one order — from the stove to the door.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="${browse}">Find food</a>
             <a class="btn btn-line" href="#/signup/restaurant">Open your kitchen</a>
@@ -53,17 +54,19 @@ App.viewLanding = async function viewLanding() {
       </section>
       <section class="section wrap">
         <h2>How it works</h2>
-        <p class="muted" style="margin-bottom:16px">One order, two sides — the table and the kitchen.</p>
-        <div class="how two">
+        <p class="muted" style="margin-bottom:16px">One order, three desks — table, kitchen, and rider.</p>
+        <div class="how three">
           <article class="how-card"><em>01</em><strong>Customer</strong><p class="muted">Browse a kitchen, pay with eSewa, Khalti, card, or cash, and track the plate.</p></article>
-          <article class="how-card"><em>02</em><strong>Restaurant</strong><p class="muted">Confirm the ticket, cook, and mark it ready for pickup or delivery.</p></article>
+          <article class="how-card"><em>02</em><strong>Restaurant</strong><p class="muted">Confirm the ticket, cook, and mark it ready for pickup or a rider.</p></article>
+          <article class="how-card"><em>03</em><strong>Rider</strong><p class="muted">Take a ready delivery, pick it up, and mark it at the door.</p></article>
         </div>
       </section>
       <section class="section wrap">
         <h2>Choose your door</h2>
-        <div class="portal-grid two" style="margin-top:16px">
+        <div class="portal-grid three" style="margin-top:16px">
           <a class="portal" href="#/login/customer"><em>Eat</em><strong>Customer</strong><p class="muted">Order from open kitchens.</p></a>
           <a class="portal" href="#/login/restaurant"><em>Cook</em><strong>Restaurant</strong><p class="muted">Run the menu and the tickets.</p></a>
+          <a class="portal" href="#/login/rider"><em>Ride</em><strong>Rider</strong><p class="muted">Pick up what's ready.</p></a>
         </div>
       </section>
       <footer class="site-foot">${App.dbFooter()}</footer>`;
